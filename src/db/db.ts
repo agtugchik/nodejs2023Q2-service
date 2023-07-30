@@ -11,6 +11,15 @@ const db: IDb = {
       updatedAt: 1,
     },
   ],
+  tracks: [
+    {
+      id: '1fd7cea0-5950-4f07-9145-6cff09b5f433',
+      name: '1',
+      artistId: null,
+      albumId: null,
+      duration: 1,
+    },
+  ],
 };
 
 export default db;
