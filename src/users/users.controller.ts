@@ -8,7 +8,9 @@ import {
   ValidationPipe,
   Delete,
   HttpCode,
+  Put,
 } from '@nestjs/common';
+import UpdatePasswordDto from 'src/dto/updatePassword.dro';
 import { IUserWithoutPassword } from 'src/types/usersTypes';
 import CreateUserDto from '../dto/createUser.dto';
 import { UsersService } from './users.service';
@@ -37,5 +39,10 @@ export class UsersController {
   @HttpCode(204)
   deleteUser(@Param('id') id: string) {
     this.appService.deleteUser(id);
+  }
+
+  @Put('user/:id')
+  updatePassword(@Body() dto: UpdatePasswordDto, @Param('id') id: string) {
+    return this.appService.updatePassword(dto, id);
   }
 }

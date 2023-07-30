@@ -1,10 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { IUserWithoutPassword } from 'src/types/usersTypes';
 import db from 'src/db/db';
 import getUserWithoutPass from 'src/helpers/getUserWithoutPass';
 import CreateUserDto from 'src/dto/createUser.dto';
 import { v4 } from 'uuid';
 import userClientErrorResponses from 'src/helpers/userClientErrorResponses';
+import UpdatePasswordDto from 'src/dto/updatePassword.dro';
 
 @Injectable()
 export class UsersService {
@@ -34,5 +39,16 @@ export class UsersService {
   deleteUser(id: string) {
     userClientErrorResponses(id);
     db.users = db.users.filter((user) => user.id !== id);
+  }
+
+  updatePassword(dto: UpdatePasswordDto, id: string) {
+    if (!dto.newPassword || !dto.oldPassword) throw new BadRequestException('');
+    const user = userClientErrorResponses(id);
+    if (user.password !== dto.oldPassword)
+      throw new ForbiddenException('Wrong password');
+    user.password = dto.newPassword;
+    user.version++;
+    user.updatedAt = Date.now();
+    return getUserWithoutPass(user);
   }
 }
