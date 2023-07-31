@@ -31,6 +31,11 @@ const db: IDb = {
       artistId: null,
     },
   ],
+  favs: {
+    artists: [],
+    albums: [],
+    tracks: [],
+  },
 };
 
 export default db;

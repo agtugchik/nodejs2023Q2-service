@@ -1,5 +1,6 @@
 import IAlbum from './albumetype';
 import IArtist from './artistType';
+import IFavorites from './favouritesType';
 import ITrack from './trackType';
 import IUser from './userTypes';
 
@@ -8,6 +9,7 @@ interface IDb {
   tracks: Array<ITrack>;
   artists: Array<IArtist>;
   albums: Array<IAlbum>;
+  favs: IFavorites;
 }
 
 export default IDb;
