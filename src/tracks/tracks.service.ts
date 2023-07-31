@@ -34,18 +34,11 @@ export class TracksService {
   }
 
   updateTrack(dto: CreateTrackDto, id: string) {
-    // if (!dto.newPassword || !dto.oldPassword) throw new BadRequestException('');
     const track = clientErrorResponses(id, 'tracks') as ITrack;
-    // if (user.password !== dto.oldPassword)
-    //   throw new ForbiddenException('Wrong password');
-    // user.password = dto.newPassword;
-    // user.version++;
-    // user.updatedAt = Date.now();
-    track.id = v4();
     track.name = dto.name;
     track.duration = dto.duration;
     track.artistId = dto.artistId;
     track.albumId = dto.albumId;
-    return dto;
+    return track;
   }
 }
