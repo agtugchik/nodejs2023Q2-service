@@ -35,13 +35,13 @@ export class TracksController {
 
   @Delete('track/:id')
   @HttpCode(204)
-  deleteUser(@Param('id') id: string) {
+  deleteTrack(@Param('id') id: string) {
     this.tracksService.deleteTrack(id);
   }
 
   @UsePipes(new ValidationPipe())
   @Put('track/:id')
-  updatePassword(@Body() dto: CreateTrackDto, @Param('id') id: string) {
+  updateTrack(@Body() dto: CreateTrackDto, @Param('id') id: string) {
     return this.tracksService.updateTrack(dto, id);
   }
 }
