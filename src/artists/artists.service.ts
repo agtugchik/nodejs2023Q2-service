@@ -30,10 +30,12 @@ export class ArtistsService {
     clientErrorResponses(id, 'artists');
     db.artists = db.artists.filter((artist) => artist.id !== id);
     db.tracks = db.tracks.map((track) => {
-      if (track.artistId === id) {
-        track.artistId = null;
-      }
+      if (track.artistId === id) track.artistId = null;
       return track;
+    });
+    db.albums = db.albums.map((album) => {
+      if (album.artistId === id) album.artistId = null;
+      return album;
     });
   }
 
