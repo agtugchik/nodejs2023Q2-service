@@ -35,8 +35,6 @@ export class FavoritesService {
 
     favsEntities.tracks = favsEntities.tracks.filter((track) => !!track);
 
-    console.log(favsEntities);
-
     return favsEntities;
   }
 
