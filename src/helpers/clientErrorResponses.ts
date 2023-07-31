@@ -4,11 +4,12 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import IUser from 'src/types/userTypes';
 import ITrack from 'src/types/trackType';
 import IArtist from 'src/types/artistType';
+import IAlbum from 'src/types/albumetype';
 
 const clientErrorResponses = (
   id: string,
-  type: 'users' | 'tracks' | 'artists',
-): IUser | ITrack | IArtist => {
+  type: 'users' | 'tracks' | 'artists' | 'albums',
+): IUser | ITrack | IArtist | IAlbum => {
   if (!validateUUID(id)) {
     throw new BadRequestException('Not valid ID');
   }

@@ -22,6 +22,7 @@ export class TracksController {
   getTracks(): Array<ITrack> {
     return this.tracksService.getTracks();
   }
+
   @Get('track/:id')
   getTrack(@Param('id') id: string): ITrack {
     return this.tracksService.getTrack(id);
@@ -29,7 +30,7 @@ export class TracksController {
 
   @UsePipes(new ValidationPipe())
   @Post('track')
-  create(@Body() dto: CreateTrackDto) {
+  createTrack(@Body() dto: CreateTrackDto) {
     return this.tracksService.createTrack(dto);
   }
 

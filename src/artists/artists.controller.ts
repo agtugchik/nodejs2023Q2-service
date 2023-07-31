@@ -30,7 +30,7 @@ export class ArtistsController {
 
   @UsePipes(new ValidationPipe())
   @Post('artist')
-  create(@Body() dto: CreateArtistDto) {
+  createArtist(@Body() dto: CreateArtistDto) {
     return this.artistsService.createArtist(dto);
   }
 
