@@ -3,7 +3,7 @@ import {
   BadRequestException,
   ForbiddenException,
 } from '@nestjs/common';
-import IUser, { IUserWithoutPassword } from 'src/types/usersTypes';
+import IUser, { IUserWithoutPassword } from 'src/types/userTypes';
 import db from 'src/db/db';
 import getUserWithoutPass from 'src/helpers/getUserWithoutPass';
 import CreateUserDto from 'src/dto/createUser.dto';

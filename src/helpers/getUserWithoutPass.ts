@@ -1,4 +1,4 @@
-import IUser, { IUserWithoutPassword } from 'src/types/usersTypes';
+import IUser, { IUserWithoutPassword } from 'src/types/userTypes';
 
 const getUserWithoutPass = (user: IUser): IUserWithoutPassword => ({
   id: user.id,

@@ -30,7 +30,7 @@ export class TracksService {
 
   deleteTrack(id: string) {
     clientErrorResponses(id, 'tracks');
-    db.tracks = db.tracks.filter((user) => user.id !== id);
+    db.tracks = db.tracks.filter((track) => track.id !== id);
   }
 
   updateTrack(dto: CreateTrackDto, id: string) {

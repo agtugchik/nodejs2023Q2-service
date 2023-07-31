@@ -20,6 +20,9 @@ const db: IDb = {
       duration: 1,
     },
   ],
+  artists: [
+    { id: 'a234d5b6-5c17-4db4-8e91-9080c14cf7e5', name: 'name', grammy: true },
+  ],
 };
 
 export default db;
