@@ -2,8 +2,6 @@ import { config } from 'dotenv';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { UsersModule } from './users/users.module';
-import { TracksModule } from './tracks/tracks.module';
 config();
 
 const PORT = Number(process.env.PORT) || 4000;

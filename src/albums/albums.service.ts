@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import db from 'src/db/db';
 import CreateAlbumDto from 'src/dto/createAlbum.dto';
 import clientErrorResponses from 'src/helpers/clientErrorResponses';
-import IAlbum from 'src/types/albumetype';
+import IAlbum from 'src/types/albumeType';
 import { v4 } from 'uuid';
 
 @Injectable()

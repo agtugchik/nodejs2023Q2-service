@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import ITrack from 'src/types/trackType';
 import { AlbumsService } from './albums.service';
-import IAlbum from 'src/types/albumetype';
+import IAlbum from 'src/types/albumeType';
 import CreateAlbumDto from 'src/dto/createAlbum.dto';
 
 @Controller()

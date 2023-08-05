@@ -1,4 +1,4 @@
-import IAlbum from './albumetype';
+import IAlbum from './albumeType';
 import IArtist from './artistType';
 import ITrack from './trackType';
 

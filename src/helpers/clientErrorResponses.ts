@@ -4,7 +4,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import IUser from 'src/types/userTypes';
 import ITrack from 'src/types/trackType';
 import IArtist from 'src/types/artistType';
-import IAlbum from 'src/types/albumetype';
+import IAlbum from 'src/types/albumeType';
 
 const clientErrorResponses = (
   id: string,
