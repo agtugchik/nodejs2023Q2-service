@@ -1,6 +1,12 @@
-/node_modules
+/dist
 /doc
+/node_modules
 /test
 .env.example
+.eslintrc.js
+.gitignore
+.prettierrc
+docker-compose.yml
+package-lock.json
 npm-debug.log
 README.md
