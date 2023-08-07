@@ -82,7 +82,6 @@ export class UsersService {
     user.version++;
     user.createdAt = Number(user.createdAt);
     user.updatedAt = Date.now();
-    console.log(user);
     return (await this.userRepository.save(user)).toResponse();
   }
 }
