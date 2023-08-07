@@ -11,7 +11,7 @@ import {
   Put,
 } from '@nestjs/common';
 import UpdatePasswordDto from 'src/dto/updatePassword.dro';
-import { IUserWithoutPassword } from 'src/types/userTypes';
+// import { IUserWithoutPassword } from 'src/types/userTypes';
 import CreateUserDto from '../dto/createUser.dto';
 import { UsersService } from './users.service';
 
@@ -20,29 +20,32 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('user')
-  getUsers(): Array<IUserWithoutPassword> {
-    return this.usersService.getUsers();
+  async getUsers() {
+    return await this.usersService.getUsers();
   }
 
   @Get('user/:id')
-  getUser(@Param('id') id: string): IUserWithoutPassword {
+  async getUser(@Param('id') id: string) {
     return this.usersService.getUser(id);
   }
 
   @UsePipes(new ValidationPipe())
   @Post('user')
-  createUser(@Body() dto: CreateUserDto) {
-    return this.usersService.createUser(dto);
+  async createUser(@Body() dto: CreateUserDto) {
+    return await this.usersService.createUser(dto);
   }
 
   @Delete('user/:id')
   @HttpCode(204)
-  deleteUser(@Param('id') id: string) {
-    this.usersService.deleteUser(id);
+  async deleteUser(@Param('id') id: string) {
+    await this.usersService.deleteUser(id);
   }
 
   @Put('user/:id')
-  updatePassword(@Body() dto: UpdatePasswordDto, @Param('id') id: string) {
+  async updatePassword(
+    @Body() dto: UpdatePasswordDto,
+    @Param('id') id: string,
+  ) {
     return this.usersService.updatePassword(dto, id);
   }
 }

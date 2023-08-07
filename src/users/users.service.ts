@@ -2,53 +2,87 @@ import {
   Injectable,
   BadRequestException,
   ForbiddenException,
+  NotFoundException,
 } from '@nestjs/common';
-import IUser, { IUserWithoutPassword } from 'src/types/userTypes';
-import db from 'src/db/db';
-import getUserWithoutPass from 'src/helpers/getUserWithoutPass';
 import CreateUserDto from 'src/dto/createUser.dto';
-import { v4 } from 'uuid';
-import clientErrorResponses from 'src/helpers/clientErrorResponses';
 import UpdatePasswordDto from 'src/dto/updatePassword.dro';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserEntity } from './entities/user.entity';
+import { Repository } from 'typeorm';
+import validateUUID from 'src/helpers/validateUUID';
 
 @Injectable()
 export class UsersService {
-  getUsers(): Array<IUserWithoutPassword> {
-    return db.users.map((user) => getUserWithoutPass(user));
+  constructor(
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
+  ) {}
+  async getUsers() {
+    const users = await this.userRepository.find();
+
+    return users.map((user) => user.toResponse());
   }
 
-  getUser(id: string): IUserWithoutPassword {
-    const user = clientErrorResponses(id, 'users') as IUser;
-    return getUserWithoutPass(user);
+  async getUser(userId: string) {
+    if (!validateUUID(userId)) {
+      throw new BadRequestException('Invalid user id');
+    }
+
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user.toResponse();
   }
 
-  createUser(dto: CreateUserDto) {
-    const date = Date.now();
+  async createUser(userDto: CreateUserDto) {
+    const now = Date.now();
     const newUser = {
-      id: v4(),
-      login: dto.login,
-      password: dto.password,
+      ...userDto,
       version: 1,
-      createdAt: date,
-      updatedAt: date,
+      createdAt: now,
+      updatedAt: now,
     };
-    db.users.push(newUser);
-    return getUserWithoutPass(newUser);
+    const createUser = this.userRepository.create(newUser);
+
+    return (await this.userRepository.save(createUser)).toResponse();
   }
 
-  deleteUser(id: string) {
-    clientErrorResponses(id, 'users');
-    db.users = db.users.filter((user) => user.id !== id);
+  async deleteUser(userId: string) {
+    if (!validateUUID(userId)) {
+      throw new BadRequestException('Invalid user id');
+    }
+
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    await this.userRepository.delete(userId);
   }
 
-  updatePassword(dto: UpdatePasswordDto, id: string) {
+  async updatePassword(dto: UpdatePasswordDto, userId: string) {
     if (!dto.newPassword || !dto.oldPassword) throw new BadRequestException('');
-    const user = clientErrorResponses(id, 'users') as IUser;
-    if (user.password !== dto.oldPassword)
+    if (!validateUUID(userId)) {
+      throw new BadRequestException('Invalid user id');
+    }
+
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.password !== dto.oldPassword) {
       throw new ForbiddenException('Wrong password');
+    }
+
     user.password = dto.newPassword;
     user.version++;
+    user.createdAt = Number(user.createdAt);
     user.updatedAt = Date.now();
-    return getUserWithoutPass(user);
+    console.log(user);
+    return (await this.userRepository.save(user)).toResponse();
   }
 }

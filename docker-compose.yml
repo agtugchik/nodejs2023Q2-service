@@ -2,18 +2,18 @@ version: '3.9'
 
 services:
 
-  node:
-    container_name: server
-    build: .
-    restart: unless-stopped
-    ports: 
-      - ${PORT}:${PORT}
-    depends_on:
-      - postgres
-    environment:
-      - port=${PORT}
-    networks:
-      - user-defined-bridge
+  # node:
+  #   container_name: server
+  #   build: .
+  #   restart: unless-stopped
+  #   ports: 
+  #     - ${PORT}:${PORT}
+  #   depends_on:
+  #     - postgres
+  #   environment:
+  #     - port=${PORT}
+  #   networks:
+  #     - user-defined-bridge
 
   postgres:
     container_name: db

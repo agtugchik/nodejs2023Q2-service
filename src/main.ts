@@ -2,11 +2,11 @@ import { config } from 'dotenv';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-config();
 
 const PORT = Number(process.env.PORT) || 4000;
 
 async function bootstrap() {
+  config();
   const app = await NestFactory.create(AppModule);
 
   const options = new DocumentBuilder()

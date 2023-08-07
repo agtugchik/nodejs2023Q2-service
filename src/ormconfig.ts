@@ -1,7 +1,7 @@
-import * as dotenv from 'dotenv';
+import { config } from 'dotenv';
 import { DataSourceOptions } from 'typeorm';
 
-dotenv.config();
+config();
 
 export default {
   type: 'postgres',
@@ -10,7 +10,7 @@ export default {
   username: process.env.POSTGRES_USER as string,
   password: process.env.POSTGRES_PASSWORD as string,
   database: process.env.POSTGRES_DB as string,
-  synchronize: false,
+  synchronize: true,
   entities: ['dist/**/entities/*.entity.js'],
   migrations: ['dist/**/migration/*.js'],
   migrationRun: true,
