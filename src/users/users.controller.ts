@@ -11,7 +11,6 @@ import {
   Put,
 } from '@nestjs/common';
 import UpdatePasswordDto from 'src/dto/updatePassword.dro';
-// import { IUserWithoutPassword } from 'src/types/userTypes';
 import CreateUserDto from '../dto/createUser.dto';
 import { UsersService } from './users.service';
 

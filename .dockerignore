@@ -1,12 +1,12 @@
 /dist
-/doc
 /node_modules
-/test
+.dockerignore
 .env.example
 .eslintrc.js
 .gitignore
 .prettierrc
 docker-compose.yml
+Dockerfile
 package-lock.json
-npm-debug.log
 README.md
+npm-debug.log
