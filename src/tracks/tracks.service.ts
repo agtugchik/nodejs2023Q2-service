@@ -1,44 +1,76 @@
-import { Injectable } from '@nestjs/common';
-import db from 'src/db/db';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import CreateTrackDto from 'src/dto/createTrack.dto';
-import clientErrorResponses from 'src/helpers/clientErrorResponses';
-import ITrack from 'src/types/trackType';
-import { v4 } from 'uuid';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TrackEntity } from './entities/track.entity';
+import { Repository } from 'typeorm';
+import validateUUID from 'src/helpers/validateUUID';
 
 @Injectable()
 export class TracksService {
-  getTracks() {
-    return db.tracks;
+  constructor(
+    @InjectRepository(TrackEntity)
+    private trackRepository: Repository<TrackEntity>,
+  ) {}
+
+  async getTracks() {
+    const tracks = await this.trackRepository.find();
+
+    return tracks.map((track) => track);
   }
 
-  getTrack(id: string) {
-    const track = clientErrorResponses(id, 'tracks') as ITrack;
+  async getTrack(trackId: string) {
+    if (!validateUUID(trackId)) {
+      throw new BadRequestException('Invalid track id');
+    }
+
+    const track = await this.trackRepository.findOne({
+      where: { id: trackId },
+    });
+
+    if (!track) {
+      throw new NotFoundException('Track not found');
+    }
     return track;
   }
 
-  createTrack(dto: CreateTrackDto) {
-    const newTrack = {
-      id: v4(),
-      name: dto.name,
-      artistId: dto.artistId,
-      albumId: dto.albumId,
-      duration: dto.duration,
-    };
-    db.tracks.push(newTrack);
-    return newTrack;
+  async createTrack(dto: CreateTrackDto) {
+    const createTrack = this.trackRepository.create({ ...dto });
+
+    return await this.trackRepository.save(createTrack);
   }
 
-  deleteTrack(id: string) {
-    clientErrorResponses(id, 'tracks');
-    db.tracks = db.tracks.filter((track) => track.id !== id);
+  async deleteTrack(trackId: string) {
+    if (!validateUUID(trackId)) {
+      throw new BadRequestException('Invalid track id');
+    }
+
+    const track = await this.trackRepository.findOne({
+      where: { id: trackId },
+    });
+
+    if (!track) {
+      throw new NotFoundException('Track not found');
+    }
+    await this.trackRepository.delete(trackId);
   }
 
-  updateTrack(dto: CreateTrackDto, id: string) {
-    const track = clientErrorResponses(id, 'tracks') as ITrack;
-    track.name = dto.name;
-    track.duration = dto.duration;
-    track.artistId = dto.artistId;
-    track.albumId = dto.albumId;
-    return track;
+  async updateTrack(dto: CreateTrackDto, trackId: string) {
+    if (!validateUUID(trackId)) {
+      throw new BadRequestException('Invalid track id');
+    }
+
+    const track = await this.trackRepository.findOne({
+      where: { id: trackId },
+    });
+
+    if (!track) {
+      throw new NotFoundException('Track not found');
+    }
+
+    return await this.trackRepository.save({ ...dto, id: track.id });
   }
 }
