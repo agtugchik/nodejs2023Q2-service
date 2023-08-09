@@ -17,9 +17,7 @@ export class TracksService {
   ) {}
 
   async getTracks() {
-    const tracks = await this.trackRepository.find();
-
-    return tracks.map((track) => track);
+    return await this.trackRepository.find();
   }
 
   async getTrack(trackId: string) {

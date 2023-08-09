@@ -1,48 +1,74 @@
-import { Injectable } from '@nestjs/common';
-import db from 'src/db/db';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import CreateArtistDto from 'src/dto/createArtist.dto';
-import clientErrorResponses from 'src/helpers/clientErrorResponses';
-import IArtist from 'src/types/artistType';
-import { v4 } from 'uuid';
+import validateUUID from 'src/helpers/validateUUID';
+import { Repository } from 'typeorm';
+import { ArtistEntity } from './entities/artist.entity';
 
 @Injectable()
 export class ArtistsService {
-  getArtists() {
-    return db.artists;
+  constructor(
+    @InjectRepository(ArtistEntity)
+    private artistRepository: Repository<ArtistEntity>,
+  ) {}
+
+  async getArtists() {
+    return await this.artistRepository.find();
   }
 
-  getArtist(id: string): IArtist {
-    const artist = clientErrorResponses(id, 'artists') as IArtist;
+  async getArtist(artistId: string) {
+    if (!validateUUID(artistId)) {
+      throw new BadRequestException('Invalid artist id');
+    }
+
+    const artist = await this.artistRepository.findOne({
+      where: { id: artistId },
+    });
+
+    if (!artist) {
+      throw new NotFoundException('Artist not found');
+    }
     return artist;
   }
 
-  createArtist(dto: CreateArtistDto) {
-    const newArtist = {
-      id: v4(),
-      name: dto.name,
-      grammy: dto.grammy,
-    };
-    db.artists.push(newArtist);
-    return newArtist;
+  async createArtist(dto: CreateArtistDto) {
+    const createArtist = this.artistRepository.create({ ...dto });
+
+    return await this.artistRepository.save(createArtist);
   }
 
-  deleteArtist(id: string) {
-    clientErrorResponses(id, 'artists');
-    db.artists = db.artists.filter((artist) => artist.id !== id);
-    db.tracks = db.tracks.map((track) => {
-      if (track.artistId === id) track.artistId = null;
-      return track;
+  async deleteArtist(artistId: string) {
+    if (!validateUUID(artistId)) {
+      throw new BadRequestException('Invalid artist id');
+    }
+
+    const artist = await this.artistRepository.findOne({
+      where: { id: artistId },
     });
-    db.albums = db.albums.map((album) => {
-      if (album.artistId === id) album.artistId = null;
-      return album;
-    });
+
+    if (!artist) {
+      throw new NotFoundException('Artist not found');
+    }
+    await this.artistRepository.delete(artistId);
   }
 
-  updateArtist(dto: CreateArtistDto, id: string) {
-    const artist = clientErrorResponses(id, 'artists') as IArtist;
-    artist.name = dto.name;
-    artist.grammy = dto.grammy;
-    return artist;
+  async updateArtist(dto: CreateArtistDto, artistId: string) {
+    if (!validateUUID(artistId)) {
+      throw new BadRequestException('Invalid artist id');
+    }
+
+    const artist = await this.artistRepository.findOne({
+      where: { id: artistId },
+    });
+
+    if (!artist) {
+      throw new NotFoundException('Artist not found');
+    }
+
+    return await this.artistRepository.save({ ...dto, id: artist.id });
   }
 }
