@@ -1,46 +1,75 @@
-import { Injectable } from '@nestjs/common';
-import db from 'src/db/db';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import CreateAlbumDto from 'src/dto/createAlbum.dto';
-import clientErrorResponses from 'src/helpers/clientErrorResponses';
-import IAlbum from 'src/types/albumeType';
-import { v4 } from 'uuid';
+import validateUUID from 'src/helpers/validateUUID';
+import { Repository } from 'typeorm';
+import { AlbumEntity } from './entities/album.entity';
 
 @Injectable()
 export class AlbumsService {
-  getAlbums() {
-    return db.tracks;
+  constructor(
+    @InjectRepository(AlbumEntity)
+    private albumRepository: Repository<AlbumEntity>,
+  ) {}
+
+  async getAlbums() {
+    return await this.albumRepository.find();
   }
 
-  getAlbum(id: string) {
-    const album = clientErrorResponses(id, 'albums') as IAlbum;
-    return album;
-  }
+  async getAlbum(albumId: string) {
+    if (!validateUUID(albumId)) {
+      throw new BadRequestException('Invalid album id');
+    }
 
-  createAlbum(dto: CreateAlbumDto) {
-    const newAlbum = {
-      id: v4(),
-      name: dto.name,
-      year: dto.year,
-      artistId: dto.artistId,
-    };
-    db.albums.push(newAlbum);
-    return newAlbum;
-  }
-
-  deleteAlbum(id: string) {
-    clientErrorResponses(id, 'albums');
-    db.albums = db.albums.filter((album) => album.id !== id);
-    db.tracks = db.tracks.map((track) => {
-      if (track.albumId === id) track.albumId = null;
-      return track;
+    const album = await this.albumRepository.findOne({
+      where: { id: albumId },
     });
+
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
+    return album;
   }
 
-  updateAlbum(dto: CreateAlbumDto, id: string) {
-    const album = clientErrorResponses(id, 'albums') as IAlbum;
-    album.name = dto.name;
-    album.year = dto.year;
-    album.artistId = dto.artistId;
-    return album;
+  async createAlbum(dto: CreateAlbumDto) {
+    const createAlbum = this.albumRepository.create({ ...dto });
+
+    return await this.albumRepository.save(createAlbum);
+  }
+
+  async deleteAlbum(albumId: string) {
+    if (!validateUUID(albumId)) {
+      throw new BadRequestException('Invalid album id');
+    }
+
+    const album = await this.albumRepository.findOne({
+      where: { id: albumId },
+    });
+
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
+
+    await this.albumRepository.delete(albumId);
+  }
+
+  async updateAlbum(dto: CreateAlbumDto, albumId: string) {
+    if (!validateUUID(albumId)) {
+      throw new BadRequestException('Invalid album id');
+    }
+
+    const album = await this.albumRepository.findOne({
+      where: { id: albumId },
+    });
+
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
+
+    return await this.albumRepository.save({ ...dto, id: album.id });
   }
 }
