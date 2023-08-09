@@ -1,11 +1,7 @@
-import {
-  Injectable,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import CreateArtistDto from 'src/dto/createArtist.dto';
-import validateUUID from 'src/helpers/validateUUID';
+import errorResponses from 'src/helpers/clientErrorResponses';
 import { Repository } from 'typeorm';
 import { ArtistEntity } from './entities/artist.entity';
 
@@ -21,54 +17,30 @@ export class ArtistsService {
   }
 
   async getArtist(artistId: string) {
-    if (!validateUUID(artistId)) {
-      throw new BadRequestException('Invalid artist id');
-    }
-
-    const artist = await this.artistRepository.findOne({
-      where: { id: artistId },
-    });
-
-    if (!artist) {
-      throw new NotFoundException('Artist not found');
-    }
+    const artist = await errorResponses(
+      artistId,
+      'artist',
+      this.artistRepository,
+    );
     return artist;
   }
 
   async createArtist(dto: CreateArtistDto) {
     const createArtist = this.artistRepository.create({ ...dto });
-
     return await this.artistRepository.save(createArtist);
   }
 
   async deleteArtist(artistId: string) {
-    if (!validateUUID(artistId)) {
-      throw new BadRequestException('Invalid artist id');
-    }
-
-    const artist = await this.artistRepository.findOne({
-      where: { id: artistId },
-    });
-
-    if (!artist) {
-      throw new NotFoundException('Artist not found');
-    }
+    await errorResponses(artistId, 'artist', this.artistRepository);
     await this.artistRepository.delete(artistId);
   }
 
   async updateArtist(dto: CreateArtistDto, artistId: string) {
-    if (!validateUUID(artistId)) {
-      throw new BadRequestException('Invalid artist id');
-    }
-
-    const artist = await this.artistRepository.findOne({
-      where: { id: artistId },
-    });
-
-    if (!artist) {
-      throw new NotFoundException('Artist not found');
-    }
-
+    const artist = await errorResponses(
+      artistId,
+      'artist',
+      this.artistRepository,
+    );
     return await this.artistRepository.save({ ...dto, id: artist.id });
   }
 }

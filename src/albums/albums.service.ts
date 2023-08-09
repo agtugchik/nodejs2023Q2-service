@@ -1,11 +1,7 @@
-import {
-  Injectable,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import CreateAlbumDto from 'src/dto/createAlbum.dto';
-import validateUUID from 'src/helpers/validateUUID';
+import errorResponses from 'src/helpers/clientErrorResponses';
 import { Repository } from 'typeorm';
 import { AlbumEntity } from './entities/album.entity';
 
@@ -21,17 +17,7 @@ export class AlbumsService {
   }
 
   async getAlbum(albumId: string) {
-    if (!validateUUID(albumId)) {
-      throw new BadRequestException('Invalid album id');
-    }
-
-    const album = await this.albumRepository.findOne({
-      where: { id: albumId },
-    });
-
-    if (!album) {
-      throw new NotFoundException('Album not found');
-    }
+    const album = await errorResponses(albumId, 'album', this.albumRepository);
     return album;
   }
 
@@ -42,34 +28,12 @@ export class AlbumsService {
   }
 
   async deleteAlbum(albumId: string) {
-    if (!validateUUID(albumId)) {
-      throw new BadRequestException('Invalid album id');
-    }
-
-    const album = await this.albumRepository.findOne({
-      where: { id: albumId },
-    });
-
-    if (!album) {
-      throw new NotFoundException('Album not found');
-    }
-
+    await errorResponses(albumId, 'album', this.albumRepository);
     await this.albumRepository.delete(albumId);
   }
 
   async updateAlbum(dto: CreateAlbumDto, albumId: string) {
-    if (!validateUUID(albumId)) {
-      throw new BadRequestException('Invalid album id');
-    }
-
-    const album = await this.albumRepository.findOne({
-      where: { id: albumId },
-    });
-
-    if (!album) {
-      throw new NotFoundException('Album not found');
-    }
-
+    const album = await errorResponses(albumId, 'album', this.albumRepository);
     return await this.albumRepository.save({ ...dto, id: album.id });
   }
 }
