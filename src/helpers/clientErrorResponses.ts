@@ -9,7 +9,11 @@ import { TrackEntity } from 'src/tracks/entities/track.entity';
 const errorResponses = async (
   id: string,
   type: 'user' | 'album' | 'artist' | 'track',
-  repository: Repository<UserEntity | AlbumEntity | ArtistEntity | TrackEntity>,
+  repository:
+    | Repository<UserEntity>
+    | Repository<AlbumEntity>
+    | Repository<ArtistEntity>
+    | Repository<TrackEntity>,
 ) => {
   if (!validateUUID(id)) {
     throw new BadRequestException(`Invalid ${type} id`);
