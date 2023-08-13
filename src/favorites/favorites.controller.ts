@@ -1,45 +1,45 @@
 import { Controller, Get, Param, Post, Delete, HttpCode } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 
-@Controller()
+@Controller('favs')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
-  @Get('favs')
-  getTracks() {
-    return this.favoritesService.getFavorites();
+  @Get()
+  async getTracks() {
+    return await this.favoritesService.getFavorites();
   }
 
-  @Post('favs/track/:id')
-  addTrackToFavs(@Param('id') id: string) {
-    this.favoritesService.addTrackToFavs(id);
+  @Post('/track/:id')
+  async addTrackToFavs(@Param('id') id: string) {
+    await this.favoritesService.addTrackToFavs(id);
   }
 
-  @Delete('favs/track/:id')
+  @Delete('/track/:id')
   @HttpCode(204)
-  deleteTrackFromFavs(@Param('id') id: string) {
-    this.favoritesService.deleteTrackFromFavs(id);
+  async deleteTrackFromFavs(@Param('id') id: string) {
+    await this.favoritesService.deleteTrackFromFavs(id);
   }
 
-  // @Post('favs/album/:id')
-  // addAlbumToFavs(@Param('id') id: string) {
-  //   this.favoritesService.addAlbumToFavs(id);
-  // }
+  @Post('/album/:id')
+  async addAlbumToFavs(@Param('id') id: string) {
+    await this.favoritesService.addAlbumToFavs(id);
+  }
 
-  // @Delete('favs/album/:id')
-  // @HttpCode(204)
-  // deleteAlbumFromFavs(@Param('id') id: string) {
-  //   this.favoritesService.deleteAlbumFromFavs(id);
-  // }
+  @Delete('/album/:id')
+  @HttpCode(204)
+  async deleteAlbumFromFavs(@Param('id') id: string) {
+    await this.favoritesService.deleteAlbumFromFavs(id);
+  }
 
-  // @Post('favs/artist/:id')
-  // addArtistToFavs(@Param('id') id: string) {
-  //   this.favoritesService.addArtistToFavs(id);
-  // }
+  @Post('/artist/:id')
+  async addArtistToFavs(@Param('id') id: string) {
+    await this.favoritesService.addArtistToFavs(id);
+  }
 
-  // @Delete('favs/artist/:id')
-  // @HttpCode(204)
-  // deleteArtistFromFavs(@Param('id') id: string) {
-  //   this.favoritesService.deleteArtistFromFavs(id);
-  // }
+  @Delete('/artist/:id')
+  @HttpCode(204)
+  async deleteArtistFromFavs(@Param('id') id: string) {
+    await this.favoritesService.deleteArtistFromFavs(id);
+  }
 }

@@ -1,4 +1,9 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  UnprocessableEntityException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AlbumEntity } from 'src/albums/entities/album.entity';
 import { ArtistEntity } from 'src/artists/entities/artist.entity';
@@ -26,41 +31,67 @@ export class FavoritesService {
       await this.favoriteRepository.save({});
       favs = await this.getFavs();
     }
-    // console.log((await this.favoriteRepository.find()).length);
-
     return favs;
   }
 
   private async getFavs() {
     return (
       await this.favoriteRepository.find({
-        // where: {},
         relations: { tracks: true, albums: true, artists: true },
       })
     )[0];
   }
 
   async addTrackToFavs(id: string) {
-    if (!validateUUID(id)) throw new HttpException('', HttpStatus.BAD_REQUEST);
+    if (!validateUUID(id)) throw new BadRequestException('');
     const track = await this.trackRepository.findOne({ where: { id } });
-    if (!track) throw new HttpException('', HttpStatus.UNPROCESSABLE_ENTITY);
+    if (!track) throw new UnprocessableEntityException('');
     const favs = await this.getFavs();
     favs.tracks.push(track);
-    console.log('BEFORE ADD TRACK', favs.tracks.length);
     await this.favoriteRepository.save(favs);
-    console.log('AFTER ADD TRACK', (await this.getFavs()).tracks.length);
+  }
+  async addAlbumToFavs(id: string) {
+    if (!validateUUID(id)) throw new BadRequestException('');
+    const album = await this.albumRepository.findOne({ where: { id } });
+    if (!album) throw new UnprocessableEntityException('');
+    const favs = await this.getFavs();
+    favs.albums.push(album);
+    await this.favoriteRepository.save(favs);
+  }
+
+  async addArtistToFavs(id: string) {
+    if (!validateUUID(id)) throw new BadRequestException('');
+    const artist = await this.artistRepository.findOne({ where: { id } });
+    if (!artist) throw new UnprocessableEntityException('');
+    const favs = await this.getFavs();
+    favs.artists.push(artist);
+    await this.favoriteRepository.save(favs);
   }
 
   async deleteTrackFromFavs(id: string) {
-    if (!validateUUID(id)) throw new HttpException('', HttpStatus.BAD_REQUEST);
+    if (!validateUUID(id)) throw new BadRequestException('');
     const favs = await this.getFavs();
-    // console.log('favs', favs);
-    const track = favs.tracks.find((track) => track.id == id);
-
-    // console.log('TRACKID', id);
-    // console.log('TRACK', track);
-    if (!track) throw new HttpException('', HttpStatus.NOT_FOUND);
+    const track = favs.tracks.find((track) => track.id === id);
+    if (!track) throw new NotFoundException('');
     favs.tracks = favs.tracks.filter((track) => track.id !== id);
+    await this.favoriteRepository.save(favs);
+  }
+
+  async deleteAlbumFromFavs(id: string) {
+    if (!validateUUID(id)) throw new BadRequestException('');
+    const favs = await this.getFavs();
+    const album = favs.albums.find((album) => album.id === id);
+    if (!album) throw new NotFoundException('');
+    favs.albums = favs.albums.filter((album) => album.id !== id);
+    await this.favoriteRepository.save(favs);
+  }
+
+  async deleteArtistFromFavs(id: string) {
+    if (!validateUUID(id)) throw new BadRequestException('');
+    const favs = await this.getFavs();
+    const artist = favs.artists.find((artist) => artist.id === id);
+    if (!artist) throw new NotFoundException('');
+    favs.artists = favs.artists.filter((album) => album.id !== id);
     await this.favoriteRepository.save(favs);
   }
 }
