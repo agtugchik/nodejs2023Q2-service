@@ -1,14 +1,16 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import options from './ormconfig';
 
-const newOptions = {
-  ...options,
+const options = {
+  type: 'postgres',
   host: 'localhost',
-  entities: ['dist/**/entities/*.entity.js'],
-  migrations: ['src/migration/*.js'],
-  logging: false,
+  port: 5432,
+  username: 'postgres',
+  password: 'postgres',
+  database: 'postgres',
+  entities: ['src/**/entities/*.entity{.js,.ts}'],
+  migrations: ['src/migration/*{.js,.ts}'],
 } as DataSourceOptions;
 
-const dataSource = new DataSource(newOptions).initialize();
+const dataSource = new DataSource(options);
 
 export default dataSource;

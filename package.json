@@ -19,7 +19,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "vulnerability": "npm audit"
+    "vulnerability": "npm audit",
+    "typeorm": "typeorm-ts-node-esm",
+    "migration:generate": "npm run typeorm migration:generate -- src/migration/migration -d src/dataSourceMigration.ts",
+    "migration:run": "npm run typeorm migration:run -- -d src/dataSourceMigration.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.1.3",
