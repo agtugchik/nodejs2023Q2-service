@@ -51,6 +51,14 @@ docker-compose down
 
 ## Npm script for vulnerabilities
 
+Register at https://app.snyk.io/, then run
+
+```
+npx snyx auth
+```
+
+and finaly
+
 ```
 npm run vulnerability
 ```
