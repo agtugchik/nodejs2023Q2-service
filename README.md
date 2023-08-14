@@ -37,6 +37,12 @@ Start `Docker Desktop` on your PC, then run application with
 docker-compose up -V
 ```
 
+Run migration
+
+```
+npm run migration:run
+```
+
 Stop application with `Ctrl + C`, then use
 
 ```
