@@ -1,0 +1,12 @@
+/dist
+/node_modules
+.dockerignore
+.env.example
+.eslintrc.js
+.gitignore
+.prettierrc
+docker-compose.yml
+Dockerfile
+package-lock.json
+README.md
+npm-debug.log
