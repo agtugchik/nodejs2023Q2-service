@@ -18,27 +18,35 @@ Go to application folder
 ```
 cd nodejs2023Q2-service
 ```
-Switch to develop branch
+
+Switch to work branch
 
 ```
-git switch develop
+git switch docker-database
 ```
 
-Installing NPM modules
+Install NPM modules
 
 ```
-npm install
+npm i
 ```
 
-Running application
+Start `Docker Desktop` on your PC, then run application with
 
 ```
-npm start
+docker-compose up -V
 ```
-Or Running application in developer mode
+
+Stop application with `Ctrl + C`, then use
 
 ```
-npm run start:dev
+docker-compose down
+```
+
+## Npm script for vulnerabilities
+
+```
+npm run vulnerability
 ```
 
 ## Testing
@@ -56,7 +64,6 @@ To run only one of all test suites
 ```
 npm run test -- <path to suite>
 ```
-
 
 ### Auto-fix and format
 
