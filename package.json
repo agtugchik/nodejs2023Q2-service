@@ -19,7 +19,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "vulnerability": "npm audit",
+    "vulnerability": "npx snyk container test nodejs2023q2-service-node",
     "typeorm": "typeorm-ts-node-esm",
     "migration:generate": "npm run typeorm migration:generate -- src/migration/migration -d src/dataSourceMigration.ts",
     "migration:run": "npm run typeorm migration:run -- -d src/dataSourceMigration.ts"
@@ -41,6 +41,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^5.0.1",
     "rxjs": "^7.8.1",
+    "snyk": "^1.1200.0",
     "typeorm": "^0.3.17",
     "uuid": "^9.0.0"
   },
