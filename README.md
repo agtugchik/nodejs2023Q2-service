@@ -54,7 +54,7 @@ docker-compose down
 Register at https://app.snyk.io/, then run
 
 ```
-npx snyx auth
+npx snyk auth
 ```
 
 and finaly
