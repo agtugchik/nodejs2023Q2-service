@@ -1,5 +1,5 @@
 import {
-  BadRequestException,
+  // BadRequestException,
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
@@ -21,8 +21,8 @@ export class AuthService {
   ) {}
 
   async signup(dto: CreateUserDto) {
-    const existUser = await this.getExistUser(dto.login);
-    if (existUser) throw new BadRequestException('User login already used');
+    // const existUser = await this.getExistUser(dto.login);
+    // if (existUser) throw new BadRequestException('User login already used');
     return await this.usersService.createUser(dto);
   }
 
@@ -32,7 +32,7 @@ export class AuthService {
     if (!existUser || !isValidPassword)
       throw new ForbiddenException('Login or password incorrect');
     const token = await this.tokenService.generateJwtToken(existUser);
-    return { ...existUser.toResponse(), token };
+    return { accessToken: token };
   }
 
   private async getExistUser(login: string) {
