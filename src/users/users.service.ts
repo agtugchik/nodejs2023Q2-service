@@ -10,12 +10,14 @@ import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import errorResponses from 'src/helpers/clientErrorResponses';
 import { hash } from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
+    private readonly userRepository: Repository<UserEntity>,
+    private readonly configService: ConfigService,
   ) {}
 
   async getUsers() {
@@ -68,6 +70,6 @@ export class UsersService {
     return (await this.userRepository.save(user)).toResponse();
   }
   private async hashPassword(pass: string) {
-    return hash(pass, process.env.CRYPT_SALT || 10);
+    return hash(pass, Number(this.configService.get('CRYPT_SALT')));
   }
 }

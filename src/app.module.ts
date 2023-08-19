@@ -8,9 +8,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import configService from './ormconfig';
 import { AuthModule } from './auth/auth.module';
 import { TokenModule } from './token/token.module';
+import { ConfigModule } from '@nestjs/config';
+import config from './config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [config],
+    }),
     UsersModule,
     TracksModule,
     ArtistsModule,
