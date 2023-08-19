@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { compare } from 'bcrypt';
+import { TokenService } from '../token/token.service';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +17,7 @@ export class AuthService {
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
     private readonly usersService: UsersService,
+    private readonly tokenService: TokenService,
   ) {}
 
   async signup(dto: CreateUserDto) {
@@ -26,10 +28,11 @@ export class AuthService {
 
   async login(dto: CreateUserDto) {
     const existUser = await this.getExistUser(dto.login);
-    const isValidPassword = await compare(dto.password, existUser.password);
+    const isValidPassword = await compare(dto.password, existUser?.password);
     if (!existUser || !isValidPassword)
       throw new ForbiddenException('Login or password incorrect');
-    return existUser.toResponse();
+    const token = await this.tokenService.generateJwtToken(existUser);
+    return { ...existUser.toResponse(), token };
   }
 
   private async getExistUser(login: string) {

@@ -68,6 +68,6 @@ export class UsersService {
     return (await this.userRepository.save(user)).toResponse();
   }
   private async hashPassword(pass: string) {
-    return hash(pass, 10);
+    return hash(pass, process.env.CRYPT_SALT || 10);
   }
 }
