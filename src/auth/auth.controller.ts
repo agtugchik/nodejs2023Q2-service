@@ -21,6 +21,6 @@ export class AuthController {
   @UsePipes(new ValidationPipe())
   @Post('login')
   async login(@Body() dto: CreateUserDto) {
-    return await this.authService.signup(dto);
+    return await this.authService.login(dto);
   }
 }

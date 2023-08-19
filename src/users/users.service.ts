@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import errorResponses from 'src/helpers/clientErrorResponses';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -34,7 +35,8 @@ export class UsersService {
   async createUser(userDto: CreateUserDto) {
     const now = Date.now();
     const newUser = {
-      ...userDto,
+      login: userDto.login,
+      password: await this.hashPassword(userDto.password),
       version: 1,
       createdAt: now,
       updatedAt: now,
@@ -64,5 +66,8 @@ export class UsersService {
     user.createdAt = Number(user.createdAt);
     user.updatedAt = Date.now();
     return (await this.userRepository.save(user)).toResponse();
+  }
+  private async hashPassword(pass: string) {
+    return hash(pass, 10);
   }
 }
