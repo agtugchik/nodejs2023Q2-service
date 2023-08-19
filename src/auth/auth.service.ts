@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import CreateUserDto from '../dto/createUser.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,13 +18,21 @@ export class AuthService {
   ) {}
 
   async signup(dto: CreateUserDto) {
+    const existUser = await this.getExistUser(dto.login);
+    if (existUser) throw new BadRequestException('User login already used');
     return await this.usersService.createUser(dto);
   }
 
   async login(dto: CreateUserDto) {
-    const existUser = await this.usersRepository.findOne({
-      where: { login: dto.login, password: dto.password },
-    });
+    const existUser = await this.getExistUser(dto.login);
+    if (!existUser) throw new ForbiddenException('Login or password incorrect');
     return existUser.toResponse();
+  }
+
+  private async getExistUser(login: string) {
+    const existUser = await this.usersRepository.findOne({
+      where: { login: login },
+    });
+    return existUser;
   }
 }
