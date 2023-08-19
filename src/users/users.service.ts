@@ -11,6 +11,7 @@ import { Repository } from 'typeorm';
 import errorResponses from 'src/helpers/clientErrorResponses';
 import { hash } from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
+import { compare } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -60,10 +61,11 @@ export class UsersService {
       'user',
       this.userRepository,
     )) as UserEntity;
-    if (user.password !== dto.oldPassword) {
+    const isValidPassword = await compare(dto.oldPassword, user?.password);
+    if (!isValidPassword) {
       throw new ForbiddenException('Wrong password');
     }
-    user.password = dto.newPassword;
+    user.password = await this.hashPassword(dto.newPassword);
     user.version++;
     user.createdAt = Number(user.createdAt);
     user.updatedAt = Date.now();
