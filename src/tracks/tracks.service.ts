@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import CreateTrackDto from 'src/dto/createTrack.dto';
+import CreateTrackDto from '../dto/createTrack.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TrackEntity } from './entities/track.entity';
 import { Repository } from 'typeorm';
-import errorResponses from 'src/helpers/clientErrorResponses';
+import errorResponses from '../helpers/clientErrorResponses';
 
 @Injectable()
 export class TracksService {

@@ -3,12 +3,12 @@ import {
   BadRequestException,
   ForbiddenException,
 } from '@nestjs/common';
-import CreateUserDto from 'src/dto/createUser.dto';
-import UpdatePasswordDto from 'src/dto/updatePassword.dro';
+import CreateUserDto from '../dto/createUser.dto';
+import UpdatePasswordDto from '../dto/updatePassword.dro';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import errorResponses from 'src/helpers/clientErrorResponses';
+import errorResponses from '../helpers/clientErrorResponses';
 import { hash } from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { compare } from 'bcrypt';

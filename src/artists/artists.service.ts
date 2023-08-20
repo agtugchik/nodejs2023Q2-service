@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import CreateArtistDto from 'src/dto/createArtist.dto';
-import errorResponses from 'src/helpers/clientErrorResponses';
+import CreateArtistDto from '../dto/createArtist.dto';
+import errorResponses from '../helpers/clientErrorResponses';
 import { Repository } from 'typeorm';
 import { ArtistEntity } from './entities/artist.entity';
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import CreateAlbumDto from 'src/dto/createAlbum.dto';
-import errorResponses from 'src/helpers/clientErrorResponses';
+import CreateAlbumDto from '../dto/createAlbum.dto';
+import errorResponses from '../helpers/clientErrorResponses';
 import { Repository } from 'typeorm';
 import { AlbumEntity } from './entities/album.entity';
 
