@@ -4,12 +4,13 @@ import {
   UsePipes,
   ValidationPipe,
   Body,
-  UseGuards,
+  ValidationError,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import CreateUserDto from '../dto/createUser.dto';
-import { AuthGuard } from './auth.guard';
 import { Public } from './publicDecorator';
+import AuthRefreshDto from 'src/dto/authRefresh.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -29,10 +30,15 @@ export class AuthController {
     return await this.authService.login(dto);
   }
 
-  @Public()
-  @UseGuards(AuthGuard)
-  @Post('test')
-  test() {
-    return true;
+  @UsePipes(
+    new ValidationPipe({
+      exceptionFactory: (validationErrors: ValidationError[] = []) => {
+        return new UnauthorizedException(validationErrors);
+      },
+    }),
+  )
+  @Post('refresh')
+  async refresh(@Body() dto: AuthRefreshDto) {
+    return await this.authService.refresh(dto);
   }
 }
