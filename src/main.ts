@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { LoggerService } from './logger/logger.service';
+import { CustomExceptionFilter } from './exceptionFilter/exceptionFilter';
 
 const PORT = Number(process.env.PORT) || 4000;
 
@@ -12,6 +13,7 @@ async function bootstrap() {
     bufferLogs: true,
   });
   app.useLogger(new LoggerService());
+  app.useGlobalFilters(new CustomExceptionFilter());
 
   const options = new DocumentBuilder()
     .setTitle('Home Library Service')
