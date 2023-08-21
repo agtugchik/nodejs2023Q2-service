@@ -67,16 +67,8 @@ npm run vulnerability
 
 After application running open new terminal and enter:
 
-To run all tests without authorization
-
 ```
-npm run test
-```
-
-To run only one of all test suites
-
-```
-npm run test -- <path to suite>
+npm run test:auth
 ```
 
 ### Auto-fix and format
