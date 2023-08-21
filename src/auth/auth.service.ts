@@ -10,7 +10,7 @@ import { UserEntity } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { compare } from 'bcrypt';
 import { TokenService } from '../token/token.service';
-import AuthRefreshDto from 'src/dto/authRefresh.dto';
+import AuthRefreshDto from '../dto/authRefresh.dto';
 
 @Injectable()
 export class AuthService {
